@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -12,12 +13,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.graphics.Palette;
 import android.text.Html;
-import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,8 @@ public class ArticleDetailFragment
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private FloatingActionButton mFab;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -140,6 +143,12 @@ public class ArticleDetailFragment
             }
         });
 
+
+        collapsingToolbarLayout = (CollapsingToolbarLayout) mRootView.findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        mFab = (FloatingActionButton) mRootView.findViewById(R.id.share_fab);
+
         bindViews();
         updateStatusBar();
         return mRootView;
@@ -188,6 +197,7 @@ public class ArticleDetailFragment
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);
             titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
+            collapsingToolbarLayout.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
 
             ImagePipeline imagePipeline = Fresco.getImagePipeline();
@@ -211,7 +221,7 @@ public class ArticleDetailFragment
                         }
                         Palette p = Palette.generate(bitmap, 12);
                         mMutedColor = p.getDarkMutedColor(0xFF333333);
-                        mRootView.findViewById(R.id.meta_bar).setBackgroundColor(mMutedColor);
+                        mRootView.findViewById(R.id.appbar).setBackgroundColor(mMutedColor);
                         updateStatusBar();
                     }
 
@@ -245,7 +255,7 @@ public class ArticleDetailFragment
             }
             return;
         }
-        
+
         mCursor = cursor;
         if (mCursor != null && !mCursor.moveToFirst()) {
             Log.e(TAG, "Error reading item detail cursor");
@@ -271,5 +281,22 @@ public class ArticleDetailFragment
         return mIsCard
                 ? (int) mPhotoContainerView.getTranslationY() + mPhotoView.getHeight() - mScrollY
                 : mPhotoView.getHeight() - mScrollY;
+    }
+
+    private void applyPalette(Palette palette) {
+        int primaryDark = getResources().getColor(R.color.theme_primary_dark, null);
+        int primary = getResources().getColor(R.color.theme_primary, null);
+        collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(primary));
+        collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
+        updateBackground(mFab, palette);
+//        supportStartPostponedEnterTransition();
+    }
+
+    private void updateBackground(FloatingActionButton fab, Palette palette) {
+        int lightVibrantColor = palette.getLightVibrantColor(getResources().getColor(android.R.color.white));
+        int vibrantColor = palette.getVibrantColor(getResources().getColor(R.color.theme_accent));
+
+        fab.setRippleColor(lightVibrantColor);
+        fab.setBackgroundTintList(ColorStateList.valueOf(vibrantColor));
     }
 }
