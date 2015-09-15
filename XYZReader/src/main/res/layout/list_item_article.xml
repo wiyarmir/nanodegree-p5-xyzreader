@@ -19,7 +19,7 @@
         android:orientation="vertical">
 
         <!--suppress AndroidLintContentDescription -->
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="fill_parent"
             android:layout_height="100dp"
