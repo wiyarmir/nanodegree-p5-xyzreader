@@ -57,11 +57,9 @@ public class ArticleDetailFragment
     private long mItemId;
     private View mRootView;
     private int mMutedColor = 0xFF333333;
-    private CoordinatorLayout mDrawInsetsFrameLayout;
     private ColorDrawable mStatusBarColorDrawable;
 
     private int mTopInset;
-    private View mPhotoContainerView;
     private SimpleDraweeView mPhotoView;
     private int mScrollY;
     private boolean mIsCard = false;
@@ -117,19 +115,8 @@ public class ArticleDetailFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        mDrawInsetsFrameLayout = (CoordinatorLayout)
-                mRootView.findViewById(R.id.draw_insets_frame_layout);
-
-        mDrawInsetsFrameLayout.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-            @Override
-            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-                mTopInset = windowInsets.getStableInsetTop();
-                return windowInsets;
-            }
-        });
 
         mPhotoView = (SimpleDraweeView) mRootView.findViewById(R.id.photo);
-        mPhotoContainerView = mRootView.findViewById(R.id.collapsing_toolbar);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
@@ -190,7 +177,6 @@ public class ArticleDetailFragment
 
         TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
         TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
-        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
@@ -273,13 +259,13 @@ public class ArticleDetailFragment
     }
 
     public int getUpButtonFloor() {
-        if (mPhotoContainerView == null || mPhotoView.getHeight() == 0) {
+        if (collapsingToolbarLayout == null || mPhotoView.getHeight() == 0) {
             return Integer.MAX_VALUE;
         }
 
         // account for parallax
         return mIsCard
-                ? (int) mPhotoContainerView.getTranslationY() + mPhotoView.getHeight() - mScrollY
+                ? (int) collapsingToolbarLayout.getTranslationY() + mPhotoView.getHeight() - mScrollY
                 : mPhotoView.getHeight() - mScrollY;
     }
 
