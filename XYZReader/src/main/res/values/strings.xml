@@ -9,5 +9,6 @@
 
     <string name="up">Up</string>
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed ligula non tellus vehicula pulvinar. Suspendisse nec erat euismod, condimentum quam ut, lobortis mauris. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris dignissim quis orci a dictum. Vivamus ex risus, dapibus id mattis vel, tristique a dui. Donec luctus nisl sem, vel maximus neque vestibulum eu. Maecenas vel facilisis magna. Nunc tempus augue vel enim molestie, eget congue magna ultrices.  Nulla lacinia ipsum vel diam bibendum, vitae interdum lorem ultrices. Praesent enim tellus, imperdiet non pharetra in, sodales sit amet nisi. Pellentesque luctus metus nec diam porta, et facilisis erat suscipit. Nulla interdum, ante a placerat hendrerit, neque velit mattis ipsum, ac bibendum quam libero at felis. Fusce interdum placerat magna, at porttitor velit ornare id. Aliquam nulla risus, elementum vel justo at, euismod finibus sem. Etiam accumsan risus sit amet placerat luctus. Nam vel ullamcorper ex, ac semper urna.</string>
+    <string name="transition_article_image">articleImage</string>
 
 </resources>
