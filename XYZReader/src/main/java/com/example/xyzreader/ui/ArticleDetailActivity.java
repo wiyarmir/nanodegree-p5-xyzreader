@@ -55,24 +55,6 @@ public class ArticleDetailActivity
 
         mPhotoView = (ImageView) findViewById(R.id.photo);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mPhotoView.setTransitionName(getString(R.string.transition_article_image));
-            postponeEnterTransition();
-        }
-
-        findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(Intent.createChooser(
-                                ShareCompat.IntentBuilder.from(ArticleDetailActivity.this)
-                                        .setType("text/plain")
-                                        .setText("Some sample text")
-                                        .getIntent(), getString(R.string.action_share))
-                );
-            }
-        });
-
-
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
@@ -93,34 +75,22 @@ public class ArticleDetailActivity
                     .load(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
                     .fit()
                     .centerCrop()
-                    .into(mPhotoView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            scheduleStartPostponedTransition(mPhotoView);
-                        }
+                    .into(mPhotoView);
 
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
+            findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(Intent.createChooser(
+                                    ShareCompat.IntentBuilder.from(ArticleDetailActivity.this)
+                                            .setType("text/plain")
+                                            .setText(mCursor.getString(ArticleLoader.Query.TITLE))
+                                            .getIntent(), getString(R.string.action_share))
+                    );
+                }
+            });
         } else {
             titleView.setText("N/A");
             bodyView.setText("N/A");
-        }
-    }
-
-    private void scheduleStartPostponedTransition(final View sharedElement) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElement.getViewTreeObserver().addOnPreDrawListener(
-                    new ViewTreeObserver.OnPreDrawListener() {
-                        @Override
-                        public boolean onPreDraw() {
-                            sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
-                            startPostponedEnterTransition();
-                            return true;
-                        }
-                    });
         }
     }
 
